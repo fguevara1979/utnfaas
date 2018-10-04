@@ -1,0 +1,41 @@
+var params = {
+    TableName: 'Envio',
+    AttributeDefinitions: [
+        {
+            AttributeName: 'id',
+            AttributeType: 'S'
+        },
+        {
+            AttributeName: 'pendiente',
+            AttributeType: 'RANGE'
+        }
+    ],
+    GlobalSecondaryIndexUpdates: [{
+            Create: {
+                IndexName: 'Envio-pendientes',
+                KeySchema: [
+                    {
+                        AttributeName: 'id',
+                        KeyType: 'HASH'
+                    },
+                    {
+                        AttributeName: 'pendiente',
+                        KeyType: 'RANGE'
+                    }
+                    ],
+                Projection:{
+                    ProjectionType: 'KEYS_ONLY'
+                },
+                ProvisionedThroughput: {
+                    ReadCapacityUnits: 1,
+                    WriteCapacityUnits: 1,
+                },
+            },
+        },
+        // ... more optional indexes ...
+    ],
+};
+dynamodb.updateTable(params, function(err, data) {
+    if (err) ppJson(err); // an error occurred
+    else ppJson(data); // successful response
+});
